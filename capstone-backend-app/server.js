@@ -1,5 +1,6 @@
 const express = require("express");
 const dotenv = require("dotenv").config();
+const connectDb = require("../capstone-backend-app/config/dbConifg.js");
 
 const PORT = process.env.PORT || 3000;
 const app = express();
@@ -12,5 +13,5 @@ app.get("/health", (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`Server is up and running at port ${PORT}`);
+  connectDb();
 });
