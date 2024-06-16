@@ -1,6 +1,6 @@
 const express = require("express");
 const dotenv = require("dotenv").config();
-const connectDb = require("../capstone-backend-app/config/dbConifg.js");
+const connectDb = require("./config/dbConfig.js");
 
 const PORT = process.env.PORT || 3000;
 const app = express();
