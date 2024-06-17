@@ -4,6 +4,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const User = require("../model/User.js");
 const dotenv = require("dotenv").config();
+const validateNewUser = require("../middlewares/validateNewUser.js");
 
 const secret = process.env.SECRET_JWT_CODE;
 
@@ -22,7 +23,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.post("/register", async (req, res) => {
+router.post("/register", validateNewUser, async (req, res) => {
   const { name, email, password } = req.body;
 
   try {
@@ -75,6 +76,8 @@ router.post("/login", async (req, res) => {
         .status(401)
         .json({ message: "Invalid email or the passsword" });
     }
+
+    //generating jwt token
     const jsToken = jwt.sign({ email: user.email }, secret, {
       expiresIn: "1h",
     });
