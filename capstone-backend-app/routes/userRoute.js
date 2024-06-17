@@ -1,7 +1,11 @@
 const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 const User = require("../model/User.js");
+const dotenv = require("dotenv").config();
+
+const secret = process.env.SECRET_JWT_CODE;
 
 router.get("/", async (req, res) => {
   try {
@@ -28,7 +32,10 @@ router.post("/register", async (req, res) => {
         message: "User already exist",
       });
     }
+
+    //hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
+
     const newUser = await User.create({
       name,
       email,
@@ -36,7 +43,7 @@ router.post("/register", async (req, res) => {
     });
 
     res.status(200).json({
-      email: email,
+      email: newUser.email,
       status: "success",
       message: "User created Successfully",
     });
@@ -57,23 +64,30 @@ router.post("/login", async (req, res) => {
     if (!user) {
       return res
         .status(401)
-        .json({ message: "Invalid email or the passsword" });
+        .json({ message: "User not exist, Please siginup" });
     }
-    if (password !== user.password) {
+
+    //verify the hashed password
+    const verifyPassword = await bcrypt.compare(password, user.password);
+
+    if (!verifyPassword) {
       return res
         .status(401)
         .json({ message: "Invalid email or the passsword" });
     }
+    const jsToken = jwt.sign({ email: user.email }, secret, {
+      expiresIn: "1h",
+    });
     res.status(200).json({
       isOK: true,
       message: "Successfully Login",
-      email: user.email,
+      token: jsToken,
     });
   } catch (error) {
-    console.error(error);
-    res.status(501).json({
-      isOK: false,
-      message: "Please input valid email and the password",
+    console.log(error);
+    res.status(500).json({
+      status: "FAILED",
+      message: "An error occurred during login. Please try again.",
     });
   }
 });
