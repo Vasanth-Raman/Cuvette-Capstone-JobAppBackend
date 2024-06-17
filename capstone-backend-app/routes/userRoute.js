@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const bcrypt = require("bcrypt");
 const User = require("../model/User.js");
 
 router.get("/", async (req, res) => {
@@ -19,15 +20,23 @@ router.get("/", async (req, res) => {
 
 router.post("/register", async (req, res) => {
   const { name, email, password } = req.body;
+
   try {
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(409).json({
+        message: "User already exist",
+      });
+    }
+    const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = await User.create({
       name,
       email,
-      password,
+      password: hashedPassword,
     });
 
     res.status(200).json({
-      //   user: newUser,
+      email: email,
       status: "success",
       message: "User created Successfully",
     });
@@ -35,7 +44,7 @@ router.post("/register", async (req, res) => {
     console.log(error);
     res.status(500).json({
       status: "FAILED",
-      message: "Please provide required info",
+      message: "An error occurred during registration. Please try again.",
     });
   }
 });
@@ -58,6 +67,7 @@ router.post("/login", async (req, res) => {
     res.status(200).json({
       isOK: true,
       message: "Successfully Login",
+      email: user.email,
     });
   } catch (error) {
     console.error(error);
