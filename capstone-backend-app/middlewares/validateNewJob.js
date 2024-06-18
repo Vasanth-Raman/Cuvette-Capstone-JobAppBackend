@@ -21,7 +21,7 @@ const validateNewJob = (req, res, next) => {
     logoUrl: z.string().url("Invalid URL format"),
     jobPosition: z.string().min(1, "provide position of the job"),
     monthlySalary: z.number("monthly salary must be number"),
-    jobType: z.enum(["Full-Time", "Part-Time", "Iternship"]),
+    jobType: z.enum(["Full-Time", "Part-Time", "Internship"]),
     remote: z.boolean("remote must be boolean"),
     location: z.string().min(1, "Location required"),
     jobDescription: z.string().min(1, "Job description required"),
@@ -38,7 +38,7 @@ const validateNewJob = (req, res, next) => {
     const response = jobSchema.safeParse(req.body);
     // console.log(response);
     if (!response.success) {
-      //   console.log(response.error);
+      console.log(response.error);
       return res.status(400).json({
         message: "Please provide valid info",
       });

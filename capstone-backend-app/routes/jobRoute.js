@@ -4,8 +4,18 @@ const Job = require("../model/Job.js");
 const validateNewJob = require("../middlewares/validateNewJob.js");
 
 router.get("/", async (req, res) => {
+  const { minSalary, maxSalary, jobType, location, remote } = req.query;
+  console.log(minSalary, maxSalary, jobType, location, remote);
   try {
-    const jobs = await Job.find({}).lean();
+    const jobs = await Job.find({
+      monthlySalary: {
+        $gte: minSalary || 0,
+        $lte: maxSalary || 99999900,
+      },
+      jobType: jobType || { $exists: true },
+      location: location || { $exists: true },
+      remote: remote || { $exists: true },
+    }).lean();
     res.status(200).json({
       status: "ok",
       message: "Working fine data fetched",
