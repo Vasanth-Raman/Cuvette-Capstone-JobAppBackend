@@ -4,8 +4,12 @@ const Job = require("../model/Job.js");
 const validateNewJob = require("../middlewares/validateNewJob.js");
 
 router.get("/", async (req, res) => {
-  const { minSalary, maxSalary, jobType, location, remote } = req.query;
-  console.log(minSalary, maxSalary, jobType, location, remote);
+  const { minSalary, maxSalary, jobType, location, remote, specificSkill } =
+    req.query;
+  console.log(minSalary, maxSalary, jobType, location, remote, specificSkill);
+
+  const skillArray = specificSkill.length > 0 ? specificSkill.split(",") : [];
+
   try {
     const jobs = await Job.find({
       monthlySalary: {
@@ -15,6 +19,8 @@ router.get("/", async (req, res) => {
       jobType: jobType || { $exists: true },
       location: location || { $exists: true },
       remote: remote === "true" || { $exists: true }, // remote
+      skillsRequired:
+        skillArray.length > 0 ? { $in: skillArray } : { $exists: true },
     }).lean();
     res.status(200).json({
       status: "ok",
