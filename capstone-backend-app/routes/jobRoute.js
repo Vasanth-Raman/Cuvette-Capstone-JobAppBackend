@@ -14,7 +14,7 @@ router.get("/", async (req, res) => {
       },
       jobType: jobType || { $exists: true },
       location: location || { $exists: true },
-      remote: remote || { $exists: true },
+      remote: remote === "true" || { $exists: true }, // remote
     }).lean();
     res.status(200).json({
       status: "ok",
