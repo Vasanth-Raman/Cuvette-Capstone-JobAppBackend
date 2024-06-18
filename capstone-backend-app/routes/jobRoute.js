@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const Job = require("../model/Job.js");
+const validateNewJob = require("../middlewares/validateNewJob.js");
 
 router.get("/", async (req, res) => {
   try {
@@ -39,7 +40,7 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-router.post("/add", async (req, res) => {
+router.post("/add", validateNewJob, async (req, res) => {
   const {
     companyName,
     logoUrl,
