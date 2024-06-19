@@ -109,10 +109,60 @@ const addNewJob = async (req, res, next) => {
   }
 };
 
+const updateExistingJob = async (req, res, next) => {
+  const jobId = req.params.id;
+  try {
+    const {
+      companyName,
+      title,
+      description,
+      logoUrl,
+      salary,
+      location,
+      duration,
+      locationType,
+      information,
+      jobType,
+      skills,
+    } = req.body;
+  } catch (error) {
+    console.error(error); // Log the original error for debugging
+    // const customError = error;
+    next(error);
+  }
+};
+
+const deleteJob = async (req, res, next) => {
+  const jobId = req.params.id;
+  try {
+    const deletedJob = await Job.findByIdAndDelete(jobId);
+
+    console.log(deletedJob);
+
+    if (!deletedJob) {
+      return res.status(404).json({
+        status: "FAILED",
+        message: "Job not found",
+      });
+    }
+
+    res.status(200).json({
+      status: "OK",
+      message: "Job successfully deleted",
+    });
+  } catch (error) {
+    console.error(error); // Log the original error for debugging
+    // const customError = error;
+    next(error);
+  }
+};
+
 module.exports = {
   getFilteredJob,
   getJobById,
   addNewJob,
+  updateExistingJob,
+  deleteJob,
 };
 
 // companyName,

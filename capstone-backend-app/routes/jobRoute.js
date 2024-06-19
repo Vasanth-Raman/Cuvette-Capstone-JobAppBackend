@@ -6,6 +6,8 @@ const {
   getFilteredJob,
   getJobById,
   addNewJob,
+  updateExistingJob,
+  deleteJob,
 } = require("../controllers/jobController.js");
 
 router.get("/", getFilteredJob);
@@ -13,6 +15,10 @@ router.get("/", getFilteredJob);
 router.get("/:id", getJobById);
 
 router.post("/add", verifyToken, validateNewJob, addNewJob);
+
+router.put("/update/:id", verifyToken, validateNewJob, updateExistingJob);
+
+router.delete("/delete/:id", verifyToken, deleteJob);
 
 module.exports = router;
 
