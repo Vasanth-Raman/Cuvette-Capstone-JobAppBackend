@@ -8,7 +8,7 @@ const validateNewUser = require("../middlewares/validateNewUser.js");
 
 const secret = process.env.SECRET_JWT_CODE;
 
-router.get("/", async (req, res) => {
+router.get("/", async (req, res, next) => {
   try {
     const users = await User.find().lean();
     res.json({
@@ -16,14 +16,13 @@ router.get("/", async (req, res) => {
       data: users,
     });
   } catch (error) {
-    console.log(error);
-    res.status(501).json({
-      message: "internal server error",
-    });
+    console.error(error); // Log the original error for debugging
+    // const customError = error;
+    next(error);
   }
 });
 
-router.post("/register", validateNewUser, async (req, res) => {
+router.post("/register", validateNewUser, async (req, res, next) => {
   const { name, email, password } = req.body;
 
   try {
@@ -49,15 +48,13 @@ router.post("/register", validateNewUser, async (req, res) => {
       message: "User created Successfully",
     });
   } catch (error) {
-    console.log(error);
-    res.status(500).json({
-      status: "FAILED",
-      message: "An error occurred during registration. Please try again.",
-    });
+    console.error(error); // Log the original error for debugging
+    // const customError = error;
+    next(error);
   }
 });
 
-router.post("/login", async (req, res) => {
+router.post("/login", async (req, res, next) => {
   const { email, password } = req.body;
 
   try {
@@ -87,11 +84,9 @@ router.post("/login", async (req, res) => {
       token: jsToken,
     });
   } catch (error) {
-    console.log(error);
-    res.status(500).json({
-      status: "FAILED",
-      message: "An error occurred during login. Please try again.",
-    });
+    console.error(error); // Log the original error for debugging
+    // const customError = error;
+    next(error);
   }
 });
 

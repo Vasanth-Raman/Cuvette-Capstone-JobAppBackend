@@ -3,13 +3,13 @@ const router = express.Router();
 const Job = require("../model/Job.js");
 const validateNewJob = require("../middlewares/validateNewJob.js");
 
-router.get("/", async (req, res) => {
+router.get("/", async (req, res, next) => {
   const { minSalary, maxSalary, jobType, location, remote, specificSkill } =
     req.query;
   console.log(minSalary, maxSalary, jobType, location, remote, specificSkill);
 
-  const skillArray = specificSkill.length > 0 ? specificSkill.split(",") : [];
-
+  const skillArray = specificSkill ? specificSkill.split(",") : [];
+  //const remoteCheck = remote === "true" ? true : false;
   try {
     const jobs = await Job.find({
       monthlySalary: {
@@ -28,14 +28,13 @@ router.get("/", async (req, res) => {
       jobs: jobs,
     });
   } catch (error) {
-    console.log(error);
-    res.status(501).json({
-      message: "internal server error",
-    });
+    console.error(error); // Log the original error for debugging
+    // const customError = error;
+    next(error);
   }
 });
 
-router.get("/:id", async (req, res) => {
+router.get("/:id", async (req, res, next) => {
   const { id } = req.params;
   try {
     const job = await Job.findOne({ _id: id }).lean();
@@ -49,14 +48,13 @@ router.get("/:id", async (req, res) => {
       job: job,
     });
   } catch (error) {
-    console.log(error);
-    res.status(501).json({
-      message: "internal server error",
-    });
+    console.error(error); // Log the original error for debugging
+    // const customError = error;
+    next(error);
   }
 });
 
-router.post("/add", validateNewJob, async (req, res) => {
+router.post("/add", validateNewJob, async (req, res, next) => {
   const {
     companyName,
     logoUrl,
@@ -92,10 +90,9 @@ router.post("/add", validateNewJob, async (req, res) => {
       jobId: newJob._id,
     });
   } catch (error) {
-    console.log(error);
-    res.status(501).json({
-      message: "internal server error",
-    });
+    console.error(error); // Log the original error for debugging
+    // const customError = error;
+    next(error);
   }
 });
 

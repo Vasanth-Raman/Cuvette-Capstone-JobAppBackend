@@ -1,10 +1,11 @@
 const express = require("express");
 const dotenv = require("dotenv").config();
-const mongoose = require("mongoose");
+//const mongoose = require("mongoose");
 const connectDb = require("./config/dbConfig.js");
 const userRoute = require("./routes/userRoute.js");
 const jobRouter = require("./routes/jobRoute.js");
 const verifyToken = require("./middlewares/verifyToken.js");
+const globalCatches = require("./middlewares/globalCatches.js");
 // const router = express.Router();
 
 const PORT = process.env.PORT || 3000;
@@ -23,6 +24,8 @@ app.get("/health", (req, res) => {
     date: new Date().toLocaleDateString(),
   });
 });
+
+app.use(globalCatches);
 
 app.listen(PORT, () => {
   connectDb();
