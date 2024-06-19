@@ -13,8 +13,8 @@ const verifyToken = (req, res, next) => {
     }
 
     const decode = jwt.verify(token, secret);
-    //  console.log(decode);
-    req.user = decode;
+    //console.log(decode);
+    req.userId = decode.userId;
     next();
   } catch (error) {
     console.log(error);

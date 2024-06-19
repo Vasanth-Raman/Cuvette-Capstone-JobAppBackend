@@ -3,35 +3,31 @@ const z = require("zod");
 const validateNewJob = (req, res, next) => {
   const {
     companyName,
+    title,
+    description,
     logoUrl,
-    jobPosition,
-    monthlySalary,
-    jobType,
-    remote,
+    salary,
     location,
-    jobDescription,
-    aboutCompany,
-    skillsRequired,
-    additionalInformation,
-    author,
+    duration,
+    locationType,
+    information,
+    jobType,
+    skills,
+    refUserId, // we will be getting refUserId by jwt token not from body. for reference mentioned here
   } = req.body;
 
   const jobSchema = z.object({
     companyName: z.string().min(1, "Provide company name"),
+    title: z.string().min(1, "Title is required"),
+    description: z.string().min(20, "Job description required"),
     logoUrl: z.string().url("Invalid URL format"),
-    jobPosition: z.string().min(1, "provide position of the job"),
-    monthlySalary: z.number("monthly salary must be number"),
-    jobType: z.enum(["Full-Time", "Part-Time", "Internship"]),
-    remote: z.boolean("remote must be boolean"),
+    salary: z.number("monthly salary must be number"),
     location: z.string().min(1, "Location required"),
-    jobDescription: z.string().min(1, "Job description required"),
-    aboutCompany: z.string().min(1, "about company required"),
-    skillsRequired: z
-      .string()
-      .array()
-      .min(1, "Provide atleast one required skills"),
-    additionalInformation: z.string().optional(),
-    author: z.string().min(1, "Author is required"),
+    duration: z.string().min(1, "Duration required"),
+    locationType: z.string().min(1, "Location type is required"),
+    information: z.string().min(1, "Information required"),
+    jobType: z.enum(["Full-Time", "Part-Time", "Internship"]),
+    skills: z.string().array().min(1, "Provide atleast one required skills"),
   });
 
   try {
