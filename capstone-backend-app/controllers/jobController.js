@@ -125,6 +125,32 @@ const updateExistingJob = async (req, res, next) => {
       jobType,
       skills,
     } = req.body;
+    const refUserId = req.userId;
+
+    const updatedJob = await Job.findByIdAndUpdate(jobId, {
+      companyName,
+      title,
+      description,
+      logoUrl,
+      salary,
+      location,
+      duration,
+      locationType,
+      information,
+      jobType,
+      skills,
+      refUserId,
+    });
+    if (!updatedJob) {
+      return res.status(400).json({
+        message: "Job not updated",
+      });
+    }
+
+    res.status(200).json({
+      message: "Job updated successfully",
+      job: updatedJob,
+    });
   } catch (error) {
     console.error(error); // Log the original error for debugging
     // const customError = error;
