@@ -24,7 +24,7 @@ const validateNewJob = (req, res, next) => {
     salary: z.number("monthly salary must be number"),
     location: z.string().min(1, "Location required"),
     duration: z.string().min(1, "Duration required"),
-    locationType: z.string().min(1, "Location type is required"),
+    locationType: z.enum(["On-Site", "Remote", "Hybrid"]),
     information: z.string().min(1, "Information required"),
     jobType: z.enum(["Full-Time", "Part-Time", "Internship"]),
     skills: z.string().array().min(1, "Provide atleast one required skills"),
