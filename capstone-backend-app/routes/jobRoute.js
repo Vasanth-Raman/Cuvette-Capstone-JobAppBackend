@@ -1,5 +1,5 @@
 const express = require("express");
-const router = express.Router();
+const jobRouter = express.Router();
 const validateNewJob = require("../middlewares/validateNewJob.js");
 const verifyToken = require("../middlewares/verifyToken.js");
 const {
@@ -10,17 +10,17 @@ const {
   deleteJob,
 } = require("../controllers/jobController.js");
 
-router.get("/", getFilteredJob);
+jobRouter.get("/", getFilteredJob);
 
-router.get("/:id", getJobById);
+jobRouter.get("/:id", getJobById);
 
-router.post("/add", verifyToken, validateNewJob, addNewJob);
+jobRouter.post("/add", verifyToken, validateNewJob, addNewJob);
 
-router.put("/update/:id", verifyToken, validateNewJob, updateExistingJob);
+jobRouter.put("/update/:id", verifyToken, validateNewJob, updateExistingJob);
 
-router.delete("/delete/:id", verifyToken, deleteJob);
+jobRouter.delete("/delete/:id", verifyToken, deleteJob);
 
-module.exports = router;
+module.exports = jobRouter;
 
 // companyName,
 //     title,
