@@ -1,5 +1,5 @@
 const express = require("express");
-const router = express.Router();
+const UserRouter = express.Router();
 const validateNewUser = require("../middlewares/validateNewUser.js");
 const {
   getUsers,
@@ -9,10 +9,10 @@ const {
 
 console.log(getUsers, createNewUser, userLogin);
 
-router.get("/", getUsers);
+UserRouter.get("/", getUsers);
 
-router.post("/register", validateNewUser, createNewUser);
+UserRouter.post("/register", validateNewUser, createNewUser);
 
-router.post("/login", userLogin);
+UserRouter.post("/login", userLogin);
 
-module.exports = router;
+module.exports = UserRouter;
