@@ -25,7 +25,7 @@ app.get("/health", (req, res) => {
 
 app.use(globalCatches);
 
-app.listen(PORT, () => {
+app.listen(PORT,async () => {
   console.clear();
-  connectDb();
+await connectDb();
 });
